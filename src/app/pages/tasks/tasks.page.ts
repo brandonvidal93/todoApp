@@ -1,7 +1,7 @@
 import { TaskService } from './../../tasks/task.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonSegment, IonSegmentButton, IonLabel, IonItem, IonCheckbox } from '@ionic/angular/standalone';
+import { IonSegment, IonSegmentButton, IonLabel, IonItem, IonCheckbox, IonHeader, IonToolbar, IonTitle } from '@ionic/angular/standalone';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { combineLatest, map } from 'rxjs';
 import { FilterService } from 'src/app/core/filter.service';
@@ -12,7 +12,7 @@ import { CategoryService } from 'src/app/categories/category.service';
   standalone: true,
   templateUrl: './tasks.page.html',
   styleUrls: ['./tasks.page.scss'],
-  imports: [CommonModule, IonSegment, IonSegmentButton, IonLabel, IonItem, IonCheckbox, ScrollingModule]
+  imports: [CommonModule, IonSegment, IonSegmentButton, IonLabel, IonItem, IonCheckbox, ScrollingModule, IonHeader, IonToolbar, IonTitle]
 })
 export class TasksPage implements OnInit {
 
