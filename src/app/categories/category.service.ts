@@ -23,12 +23,11 @@ export class CategoryService {
     return this.categories$.asObservable();
   };
 
-  async add(name: string, description: string, color?: string) {
+  async add(name: string, description: string) {
     const newCat: Category = {
       id: crypto.randomUUID(),
       name,
       description,
-      color
     };
 
     const updated = [...this.categories$.value, newCat];

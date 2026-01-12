@@ -1,25 +1,26 @@
-import { TaskService } from './../../tasks/task.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonSegment, IonSegmentButton, IonLabel, IonItem, IonCheckbox, IonHeader, IonToolbar, IonTitle } from '@ionic/angular/standalone';
+import { IonContent, IonLabel, IonInput, IonItem, IonCheckbox, IonHeader, IonToolbar, IonTitle } from '@ionic/angular/standalone';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { combineLatest, map } from 'rxjs';
 import { FilterService } from 'src/app/core/filter.service';
 import { CategoryService } from 'src/app/categories/category.service';
+import { TaskService } from "src/app/tasks/task.service";
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
   templateUrl: './tasks.page.html',
   styleUrls: ['./tasks.page.scss'],
-  imports: [CommonModule, IonSegment, IonSegmentButton, IonLabel, IonItem, IonCheckbox, ScrollingModule, IonHeader, IonToolbar, IonTitle]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [CommonModule, IonContent, IonLabel, IonInput, IonItem, IonCheckbox, ScrollingModule, IonHeader, IonToolbar, IonTitle]
 })
 export class TasksPage implements OnInit {
+  title = '';
+  description = '';
+  categoryId: string | null = null;
 
-  constructor( private taskService: TaskService, private filterService: FilterService, private categoryService: CategoryService) { }
-
-  ngOnInit() {
-  }
+  categories$ = this.categoryService.getAll();
 
   tasks$ = combineLatest([
     this.taskService.getAll(),
@@ -31,11 +32,21 @@ export class TasksPage implements OnInit {
     })
   );
 
-  categories$ = this.categoryService.getAll();
+  constructor( private taskService: TaskService, private filterService: FilterService, private categoryService: CategoryService) { }
 
-  onFilter(ev:any) {
-    const val = ev.detail.value || null;
-    this.filterService.setCategory(val);
+  ngOnInit() {
+  }
+
+  add() {
+    if (!this.title.trim()) return;
+    this.taskService.add(this.title.trim(), this.description.trim(), this.categoryId || undefined);
+    this.title = '';
+    this.description = '';
+    this.categoryId = null;
+  }
+
+  filter(catId: string | null) {
+    this.filterService.setCategory(catId);
   }
 
   toggle(id: string) {

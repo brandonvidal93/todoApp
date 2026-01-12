@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonInput, IonButton, IonIcon } from '@ionic/angular/standalone';
@@ -13,11 +13,13 @@ import { Category } from 'src/app/categories/category.model';
   templateUrl: './categories.page.html',
   styleUrls: ['./categories.page.scss'],
   standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonList, IonItem, IonLabel, IonInput, IonButton, IonIcon]
 })
 export class CategoriesPage implements OnInit {
   categories$!: Observable<Category[]>;
   newCategory = '';
+  newDescription = '';
 
   constructor(private categoryService: CategoryService) {
     addIcons({
@@ -32,8 +34,9 @@ export class CategoriesPage implements OnInit {
 
   add() {
     if (!this.newCategory.trim()) return;
-    this.categoryService.add(this.newCategory, '');
+    this.categoryService.add(this.newCategory, this.newDescription);
     this.newCategory = '';
+    this.newDescription = '';
   };
 
   delete(id: string) {

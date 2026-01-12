@@ -10,6 +10,12 @@
       placeholder="Nueva Categoría"
       [(ngModel)]="newCategory">
     </ion-input>
+
+    <ion-input
+      placeholder="Descripción"
+      [(ngModel)]="newDescription">
+    </ion-input>
+
     <ion-button slot="end" (click)="add()">
       <ion-icon name="create-outline"></ion-icon>
     </ion-button>
