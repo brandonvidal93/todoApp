@@ -51,8 +51,8 @@
     </ion-select>
   </ion-item>
 
-  <cdk-virtual-scroll-viewport itemSize="72" style="height: 100vh">
-    <ion-item *cdkVirtualFor="let task of filteredTasks">
+  <cdk-virtual-scroll-viewport itemSize="72" class="viewport">
+    <ion-item *cdkVirtualFor="let task of tasks$ | async">
       <ion-checkbox
         slot="start"
         [checked]="task.completed"

@@ -32,8 +32,15 @@ export class TasksPage implements OnInit {
     this.filterService.filter$
   ]).pipe(
     map(([tasks, filter]) => {
-      if (!filter) return tasks;
-      return tasks.filter(t => t.categoryId === filter);
+      let filtered = tasks;
+
+      if (filter) {
+        filtered = filtered.filter(t => t.categoryId === filter);
+      }
+
+      return [...filtered].sort((a, b) => {
+        return Number(a.completed) - Number(b.completed);
+      });
     })
   );
 
@@ -49,12 +56,8 @@ export class TasksPage implements OnInit {
     addIcons({addOutline,createOutline,trashOutline});
   }
 
-  filteredTasks: any[] = [];
-
   ngOnInit() {
-    this.tasks$.subscribe(tasks => {
-      this.filteredTasks = tasks;
-    });
+    
   }
 
   add() {
