@@ -78,4 +78,26 @@ export class CategoriesPage implements OnInit {
 
     await alert.present();
   }
+
+  async confirmDelete(category: Category) {
+    const alert = await this.alertCtrl.create({
+      header: 'Eliminar categoría',
+      message: `¿Seguro que deseas eliminar la categoría ${category.name}? Las tareas asociadas quedarán sin categoría.`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: () => {
+            this.delete(category.id);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
 }
