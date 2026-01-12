@@ -17,7 +17,7 @@
     </ion-input>
 
     <ion-button slot="end" (click)="add()">
-      <ion-icon name="create-outline"></ion-icon>
+      <ion-icon name="add-outline"></ion-icon>
     </ion-button>
   </ion-item>
 
@@ -25,6 +25,15 @@
     <ion-item *ngFor="let c of categories$ | async">
       <ion-label>{{c.name}}</ion-label>
       <ion-label>{{c.description}}</ion-label>
+
+      <ion-button
+        slot="end"
+        color="primary"
+        fill="clear"
+        (click)="update(c)"
+      >
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-button>
       <ion-button
         slot="end"
         color="danger"

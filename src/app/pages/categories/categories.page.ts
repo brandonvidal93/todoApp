@@ -1,9 +1,9 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonInput, IonButton, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonInput, IonButton, IonIcon, AlertController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { trashOutline, createOutline } from 'ionicons/icons';
+import { trashOutline, createOutline, addOutline } from 'ionicons/icons';
 import { CategoryService } from 'src/app/categories/category.service';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/categories/category.model';
@@ -21,10 +21,11 @@ export class CategoriesPage implements OnInit {
   newCategory = '';
   newDescription = '';
 
-  constructor(private categoryService: CategoryService) {
+  constructor(private categoryService: CategoryService, private alertCtrl: AlertController) {
     addIcons({
       trashOutline,
-      createOutline
+      createOutline,
+      addOutline
     })
   }
 
@@ -42,4 +43,39 @@ export class CategoriesPage implements OnInit {
   delete(id: string) {
     this.categoryService.remove(id);
   };
+
+  async update(category: Category) {
+    const alert = await this.alertCtrl.create({
+      header: 'Editar categoría',
+      inputs: [
+        {
+          name: 'name',
+          type: 'text',
+          value: category.name,
+          placeholder: 'Nombre'
+        },
+        {
+          name: 'description',
+          type: 'text',
+          value: category.description,
+          placeholder: 'Descripción'
+        }
+      ],
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Guardar',
+          handler: data => {
+            this.categoryService.update(
+              category.id,
+              data.name,
+              data.description
+            );
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
 }
