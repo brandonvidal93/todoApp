@@ -11,7 +11,11 @@ export class CategoryService {
   private categories$ = new BehaviorSubject<Category[]>([]);
 
   constructor(private storage: StorageService) {
-    this.load();
+    this.init();
+  };
+
+  private async init() {
+    await this.load();
   };
 
   async load() {
