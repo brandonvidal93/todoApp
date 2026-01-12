@@ -11,8 +11,12 @@ export class TaskService {
   private tasks$ = new BehaviorSubject<Task[]>([]);
 
   constructor(private storage: StorageService) {
-    this.load();
+    this.init();
   };
+
+  private async init() {
+    await this.load();
+  }
 
   async load() {
     const data = await this.storage.get<Task[]>(STORAGE_KEYS.TASKS);
