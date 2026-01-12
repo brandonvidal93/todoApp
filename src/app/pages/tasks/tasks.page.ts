@@ -1,15 +1,16 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonLabel, IonInput, IonItem, IonCheckbox, IonHeader, IonToolbar, IonTitle, IonSelect, IonSelectOption, IonButton, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonLabel, IonInput, IonItem, IonCheckbox, IonHeader, IonToolbar, IonTitle, IonSelect, IonSelectOption, IonButton, IonIcon, AlertController } from '@ionic/angular/standalone';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { addIcons } from 'ionicons';
-import { createOutline } from 'ionicons/icons';
+import { trashOutline, createOutline, addOutline  } from 'ionicons/icons';
 import { combineLatest, map } from 'rxjs';
 import { FilterService } from 'src/app/core/filter.service';
 import { CategoryService } from 'src/app/categories/category.service';
 import { TaskService } from "src/app/tasks/task.service";
 import { RemoteConfigService } from 'src/app/core/remote-config.service';
+import { Task } from "src/app/tasks/task.model";
 
 @Component({
   selector: 'app-tasks',
@@ -31,8 +32,15 @@ export class TasksPage implements OnInit {
     this.filterService.filter$
   ]).pipe(
     map(([tasks, filter]) => {
-      if (!filter) return tasks;
-      return tasks.filter(t => t.categoryId === filter);
+      let filtered = tasks;
+
+      if (filter) {
+        filtered = filtered.filter(t => t.categoryId === filter);
+      }
+
+      return [...filtered].sort((a, b) => {
+        return Number(a.completed) - Number(b.completed);
+      });
     })
   );
 
@@ -42,19 +50,14 @@ export class TasksPage implements OnInit {
     private taskService: TaskService,
     private filterService: FilterService,
     private categoryService: CategoryService,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private alertCtrl: AlertController
   ) {
-    addIcons({
-      createOutline
-    })
+    addIcons({addOutline,createOutline,trashOutline});
   }
 
-  filteredTasks: any[] = [];
-
   ngOnInit() {
-    this.tasks$.subscribe(tasks => {
-      this.filteredTasks = tasks;
-    });
+    
   }
 
   add() {
@@ -72,5 +75,81 @@ export class TasksPage implements OnInit {
 
   toggle(id: string) {
     this.taskService.toggle(id);
+  }
+
+  delete(id: string) {
+    this.taskService.remove(id);
+  }
+
+  async confirmDelete(task: Task) {
+    const alert = await this.alertCtrl.create({
+      header: 'Eliminar tarea',
+      message: `¿Seguro que deseas eliminar esta tarea?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: () => {
+            this.delete(task.id);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async edit(task: Task) {
+    const alert = await this.alertCtrl.create({
+      header: 'Editar tarea',
+      inputs: [
+        {
+          name: 'title',
+          type: 'text',
+          value: task.title,
+          placeholder: 'Título'
+        },
+        {
+          name: 'description',
+          type: 'text',
+          value: task.description,
+          placeholder: 'Descripción'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Guardar',
+          handler: data => {
+            if (!data.title?.trim()) return false;
+
+            this.taskService.update(
+              task.id, 
+              {
+                title: data.title,
+                description: data.description
+              }
+            );
+
+            return true;
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  changeCategory(task: Task, categoryId: string | undefined) {
+    this.taskService.update(task.id, {
+      categoryId: categoryId || undefined
+    });
   }
 }

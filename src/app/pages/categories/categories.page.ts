@@ -7,6 +7,8 @@ import { trashOutline, createOutline, addOutline } from 'ionicons/icons';
 import { CategoryService } from 'src/app/categories/category.service';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/categories/category.model';
+import { TaskService } from 'src/app/tasks/task.service';
+import { Task } from "src/app/tasks/task.model";
 
 @Component({
   selector: 'app-categories',
@@ -18,10 +20,15 @@ import { Category } from 'src/app/categories/category.model';
 })
 export class CategoriesPage implements OnInit {
   categories$!: Observable<Category[]>;
+  tasks: any[] = [];
   newCategory = '';
   newDescription = '';
 
-  constructor(private categoryService: CategoryService, private alertCtrl: AlertController) {
+  constructor(
+    private categoryService: CategoryService,
+    private alertCtrl: AlertController,
+    private taskService: TaskService
+  ) {
     addIcons({
       trashOutline,
       createOutline,
@@ -31,6 +38,14 @@ export class CategoriesPage implements OnInit {
 
   ngOnInit() {
     this.categories$ = this.categoryService.getAll();
+
+    this.taskService.getAll().subscribe(tasks => {
+      this.tasks = tasks;
+    });
+  }
+
+  hasTasks(categoryId: string): boolean {
+    return this.tasks.some(task => task.categoryId === categoryId);
   }
 
   add() {
@@ -80,6 +95,17 @@ export class CategoriesPage implements OnInit {
   }
 
   async confirmDelete(category: Category) {
+    if (this.hasTasks(category.id)) {
+      const alert = await this.alertCtrl.create({
+        header: 'No se puede eliminar',
+        message: `La categoría ${category.name} tiene tareas asignadas. Elimina o mueve esas tareas antes de borrar la categoría.`,
+        buttons: ['Aceptar']
+      });
+
+      await alert.present();
+      return;
+    }
+    
     const alert = await this.alertCtrl.create({
       header: 'Eliminar categoría',
       message: `¿Seguro que deseas eliminar la categoría ${category.name}? Las tareas asociadas quedarán sin categoría.`,
