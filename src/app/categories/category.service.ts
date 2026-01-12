@@ -39,6 +39,22 @@ export class CategoryService {
     await this.storage.set(STORAGE_KEYS.CATEGORIES, updated);
   };
 
+  async update(id: string, name: string, description: string) {
+    const updated = this.categories$.value.map(cat => {
+      if (cat.id === id) {
+        return {
+          ...cat,
+          name,
+          description
+        }
+      }
+      return cat;
+    });
+
+    this.categories$.next(updated);
+    await this.storage.set(STORAGE_KEYS.CATEGORIES, updated);
+  };
+
   async remove(id: string) {
     const updated = this.categories$.value.filter(cat => cat.id !== id);
     this.categories$.next(updated);
