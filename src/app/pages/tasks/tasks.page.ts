@@ -1,7 +1,10 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonContent, IonLabel, IonInput, IonItem, IonCheckbox, IonHeader, IonToolbar, IonTitle } from '@ionic/angular/standalone';
+import { FormsModule } from '@angular/forms';
+import { IonContent, IonLabel, IonInput, IonItem, IonCheckbox, IonHeader, IonToolbar, IonTitle, IonSelect, IonSelectOption, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { addIcons } from 'ionicons';
+import { createOutline } from 'ionicons/icons';
 import { combineLatest, map } from 'rxjs';
 import { FilterService } from 'src/app/core/filter.service';
 import { CategoryService } from 'src/app/categories/category.service';
@@ -13,7 +16,7 @@ import { TaskService } from "src/app/tasks/task.service";
   templateUrl: './tasks.page.html',
   styleUrls: ['./tasks.page.scss'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [CommonModule, IonContent, IonLabel, IonInput, IonItem, IonCheckbox, ScrollingModule, IonHeader, IonToolbar, IonTitle]
+  imports: [CommonModule, FormsModule, IonContent, IonLabel, IonInput, IonItem, IonCheckbox, ScrollingModule, IonHeader, IonToolbar, IonTitle, IonSelect, IonSelectOption, IonButton, IonIcon]
 })
 export class TasksPage implements OnInit {
   title = '';
@@ -32,13 +35,22 @@ export class TasksPage implements OnInit {
     })
   );
 
-  constructor( private taskService: TaskService, private filterService: FilterService, private categoryService: CategoryService) { }
+  constructor( private taskService: TaskService, private filterService: FilterService, private categoryService: CategoryService) {
+    addIcons({
+      createOutline
+    })
+  }
+
+  filteredTasks: any[] = [];
 
   ngOnInit() {
+    this.tasks$.subscribe(tasks => {
+      this.filteredTasks = tasks;
+    });
   }
 
   add() {
-    if (!this.title.trim()) return;
+    if (!this.title.trim() && !this.description.trim()) return;
     this.taskService.add(this.title.trim(), this.description.trim(), this.categoryId || undefined);
     this.title = '';
     this.description = '';
@@ -46,7 +58,8 @@ export class TasksPage implements OnInit {
   }
 
   filter(catId: string | null) {
-    this.filterService.setCategory(catId);
+    const value = catId === '' ? null : catId;
+    this.filterService.setCategory(value);
   }
 
   toggle(id: string) {

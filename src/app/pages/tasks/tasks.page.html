@@ -28,7 +28,9 @@
       </ion-select-option>
     </ion-select>
 
-    <ion-button slot="end" (click)="add()">+</ion-button>
+    <ion-button slot="end" (click)="add()">
+      <ion-icon name="create-outline"></ion-icon>
+    </ion-button>
   </ion-item>
 
   <ion-item>
@@ -44,7 +46,7 @@
   </ion-item>
 
   <cdk-virtual-scroll-viewport itemSize="72" style="height: 100vh">
-    <ion-item *cdkVirtualFor="let task of tasks$ | async">
+    <ion-item *cdkVirtualFor="let task of filteredTasks">
       <ion-checkbox
         slot="start"
         [checked]="task.completed"
