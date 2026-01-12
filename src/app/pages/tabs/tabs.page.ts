@@ -4,6 +4,7 @@ import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angu
 import { addIcons } from "ionicons";
 import { listOutline, folderOutline } from "ionicons/icons";
 import { RouterLink } from '@angular/router';
+import { RemoteConfigService } from 'src/app/core/remote-config.service';
 
 @Component({
   selector: 'app-tabs',
@@ -14,7 +15,9 @@ import { RouterLink } from '@angular/router';
 })
 export class TabsPage implements OnInit {
 
-  constructor() { 
+  enabled$ = this.remoteConfig.categoriesEnabled();
+
+  constructor(private remoteConfig: RemoteConfigService) { 
     addIcons({
       listOutline,
       folderOutline,

@@ -9,6 +9,6 @@ import { RemoteConfigService } from './core/remote-config.service';
 })
 export class AppComponent {
   constructor(private rc: RemoteConfigService) {
-    this.rc.load().subscribe();
+    this.rc.load();
   }
 };

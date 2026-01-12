@@ -9,6 +9,7 @@ import { combineLatest, map } from 'rxjs';
 import { FilterService } from 'src/app/core/filter.service';
 import { CategoryService } from 'src/app/categories/category.service';
 import { TaskService } from "src/app/tasks/task.service";
+import { RemoteConfigService } from 'src/app/core/remote-config.service';
 
 @Component({
   selector: 'app-tasks',
@@ -35,7 +36,14 @@ export class TasksPage implements OnInit {
     })
   );
 
-  constructor( private taskService: TaskService, private filterService: FilterService, private categoryService: CategoryService) {
+  categoriesEnabled$ = this.remoteConfig.categoriesEnabled();
+
+  constructor(
+    private taskService: TaskService,
+    private filterService: FilterService,
+    private categoryService: CategoryService,
+    private remoteConfig: RemoteConfigService
+  ) {
     addIcons({
       createOutline
     })

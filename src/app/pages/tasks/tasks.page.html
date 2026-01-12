@@ -18,6 +18,7 @@
     </ion-input>
 
     <ion-select
+      *ngIf="categoriesEnabled$ | async"
       placeholder="Categoría"
       [(ngModel)]="categoryId">
       <ion-select-option [value]="null">Sin categoría</ion-select-option>
