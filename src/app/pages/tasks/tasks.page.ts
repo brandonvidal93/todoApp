@@ -129,8 +129,10 @@ export class TasksPage implements OnInit {
 
             this.taskService.update(
               task.id, 
-              data.title,
-              data.description
+              {
+                title: data.title,
+                description: data.description
+              }
             );
 
             return true;
@@ -142,4 +144,9 @@ export class TasksPage implements OnInit {
     await alert.present();
   }
 
+  changeCategory(task: Task, categoryId: string | undefined) {
+    this.taskService.update(task.id, {
+      categoryId: categoryId || undefined
+    });
+  }
 }

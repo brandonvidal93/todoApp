@@ -19,6 +19,7 @@
 
     <ion-select
       *ngIf="categoriesEnabled$ | async"
+      interface="popover"
       placeholder="Categoría"
       [(ngModel)]="categoryId">
       <ion-select-option [value]="null">Sin categoría</ion-select-option>
@@ -36,7 +37,11 @@
 
   <ion-item>
     <ion-label>Filtrar</ion-label>
-    <ion-select (ionChange)="filter($event.detail.value)">
+    <ion-select
+      interface="popover"
+      placeholder="Seleccione una categoría para filtrar"
+      (ionChange)="filter($event.detail.value)"
+    >
       <ion-select-option [value]="null">Todas</ion-select-option>
       <ion-select-option
         *ngFor="let c of categories$ | async"
@@ -53,8 +58,26 @@
         [checked]="task.completed"
         (ionChange)="toggle(task.id)">
       </ion-checkbox>
-      <ion-label>{{ task.title }}</ion-label>
-      <ion-label>{{ task.description }}</ion-label>
+      <ion-label>
+        <h2>{{ task.title }}</h2>
+        <p>{{ task.description }}</p>
+      </ion-label>
+
+      <ion-select
+        *ngIf="categoriesEnabled$ | async"
+        interface="popover"
+        [value]="task.categoryId"
+        (ionChange)="changeCategory(task, $event.detail.value)"
+        placeholder="Sin categoría"
+      >
+        <ion-select-option [value]="null">Sin categoría</ion-select-option>
+        <ion-select-option
+          *ngFor="let c of categories$ | async"
+          [value]="c.id"
+        >
+          {{ c.name }}
+        </ion-select-option>
+      </ion-select>
 
       <ion-button
         slot="end"

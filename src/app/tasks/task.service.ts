@@ -56,13 +56,12 @@ export class TaskService {
     await this.storage.set(STORAGE_KEYS.TASKS, updated);
   }
 
-  async update(id: string, title: string, description: string) {
+  async update(id: string, data: Partial<Task>) {
     const updated = this.tasks$.value.map(task => {
       if (task.id === id) {
         return {
           ...task,
-          title,
-          description
+          ...data
         }
       }
       return task;
