@@ -1,13 +1,21 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>tasks</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-segment (ionChange)="onFilter($event)">
+  <ion-segment-button value="">
+    <ion-label>Todas</ion-label>
+  </ion-segment-button>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">tasks</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+  <ion-segment-button *ngFor="let c of categories$ | async" [value]="c.id">
+    <ion-label>{{ c.name }}</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<cdk-virtual-scroll-viewport itemSize="72" style="height: 100vh">
+  <ion-item *cdkVirtualFor="let task of tasks$ | async">
+    <ion-checkbox
+      slot="start"
+      [checked]="task.completed"
+      (ionChange)="toggle(task.id)">
+    </ion-checkbox>
+    <ion-label>{{ task.title }}</ion-label>
+    <ion-label>{{ task.description }}</ion-label>
+  </ion-item>
+</cdk-virtual-scroll-viewport>
