@@ -118,3 +118,12 @@ Se aplicaron:
 - RemoteConfigService → feature flags
 - Componentes desacoplados por responsabilidad
 - Todo el estado fluye por Observables.
+
+---
+
+## 📸 Evidencias
+
+En el repositorio se incluyen:
+- Capturas de pantalla
+- Video corto de funcionamiento del FireBase Remote Config
+- APK y IPA exportados
