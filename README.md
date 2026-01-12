@@ -127,3 +127,9 @@ En el repositorio se incluyen:
 - Capturas de pantalla
 - Video corto de funcionamiento del FireBase Remote Config
 - APK y IPA exportados
+
+--- 
+
+## 👨‍💻 Autor
+
+Desarrollado por Brandon Vidal, Desarrollador Frontend.
