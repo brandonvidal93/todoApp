@@ -30,7 +30,7 @@
     </ion-select>
 
     <ion-button slot="end" (click)="add()">
-      <ion-icon name="create-outline"></ion-icon>
+      <ion-icon name="add-outline"></ion-icon>
     </ion-button>
   </ion-item>
 
@@ -55,6 +55,24 @@
       </ion-checkbox>
       <ion-label>{{ task.title }}</ion-label>
       <ion-label>{{ task.description }}</ion-label>
+
+      <ion-button
+        slot="end"
+        color="primary"
+        fill="clear"
+        (click)="edit(task)"
+      >
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        slot="end"
+        color="danger"
+        fill="clear"
+        (click)="confirmDelete(task)"
+      >
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
     </ion-item>
   </cdk-virtual-scroll-viewport>
 </ion-content>

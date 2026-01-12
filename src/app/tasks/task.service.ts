@@ -56,6 +56,22 @@ export class TaskService {
     await this.storage.set(STORAGE_KEYS.TASKS, updated);
   }
 
+  async update(id: string, title: string, description: string) {
+    const updated = this.tasks$.value.map(task => {
+      if (task.id === id) {
+        return {
+          ...task,
+          title,
+          description
+        }
+      }
+      return task;
+    });
+
+    this.tasks$.next(updated);
+    await this.storage.set(STORAGE_KEYS.TASKS, updated);
+  }
+
   async remove(id: string) {
     const updated = this.tasks$.value.filter(task => task.id !== id);
     this.tasks$.next(updated);
